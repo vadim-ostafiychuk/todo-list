@@ -13,8 +13,6 @@ function Todo({ setIsClosedTodo, todo, openEditModal, removeTodo }) {
 
   const theme = useTheme();
 
-  console.log();
-
   return (
     <Box
       display={"flex"}
