@@ -11,14 +11,8 @@ function Todo() {
   const [isClose, setIsClose] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
 
-  console.log(isShowButtons);
-
   const handleClose = () => {
     setIsClose(!isClose);
-  };
-
-  const handleShowButtons = () => {
-    setIsShowButtons(!setIsShowButtons);
   };
 
   return (
@@ -27,8 +21,9 @@ function Todo() {
       justifyContent={"space-between"}
       alignItems={"center"}
       columnGap={"1rem"}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       position={"relative"}
-      onMouseUp={() => handleShowButtons()}
       sx={{}}
     >
       <Checkbox
@@ -51,15 +46,21 @@ function Todo() {
         Lorem ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit.
       </Typography>
       <Box
-        display={isShowButtons ? "flex" : "none"}
+        sx={{}}
+        display={isHovered ? "flex" : "none"}
         position={"absolute"}
         top={"5%"}
         right={"0"}
       >
-        <IconButton disabled={!!isClose} aria-label="edit" onClick={() => {}}>
+        <IconButton
+          onClick={() => {
+            console.log("GG");
+          }}
+          aria-label="edit"
+        >
           <EditIcon sx={{ fontSize: "15px", transition: "all .75s" }} />
         </IconButton>
-        <IconButton disabled={!!isClose} aria-label="delete" onClick={() => {}}>
+        <IconButton aria-label="delete" onClick={() => {}}>
           <DeleteIcon sx={{ fontSize: "15px", transition: "all .75s" }} />
         </IconButton>
       </Box>
