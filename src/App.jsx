@@ -1,35 +1,78 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import "./App.css";
+import Header from "./components/Header";
+import Container from "@mui/material/Container";
+import Todos from "./components/Todos";
+import EditTodoModal from "./components/EditTodoModal";
+import CreateTodoModal from "./components/CreateTodoModal";
+import { ThemeProvider, Box } from "@mui/material";
+import { useEffect, useState } from "react";
+import { getCategories } from "./data/data";
+import { darkTheme, defaultTheme } from "./theme";
+import AddTodoButton from "./components/AddTodoButton";
+
+import CssBaseline from "@mui/material/CssBaseline";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [isOpenEditModal, setIsOpenEditModal] = useState(false);
+  const [isOpenCreateModal, setIsOpenCreateModal] = useState(false);
+  const [todoId, setTodoId] = useState();
+  const [categories, setCategories] = useState([]);
+  const [isLightTheme, setIsLightTheme] = useState(true);
+
+  useEffect(() => {
+    setCategories([...getCategories()]);
+  }, []);
+
+  const openEditModal = (todoId = null) => {
+    setTodoId(todoId);
+
+    setIsOpenEditModal(true);
+  };
+
+  const closeEditModal = () => {
+    setIsOpenEditModal(false);
+    setTodoId(null);
+  };
+
+  const openCreateModal = () => {
+    setIsOpenCreateModal(true);
+  };
+
+  const closeCreateModal = () => {
+    setIsOpenCreateModal(false);
+  };
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <ThemeProvider theme={isLightTheme ? defaultTheme : darkTheme}>
+        <CssBaseline />
+        <Container
+          maxWidth="md"
+          sx={{ position: "relative", minHeight: "100vh" }}
+        >
+          <Header />
+          <Todos
+            isLightTheme={isLightTheme}
+            setIsLightTheme={setIsLightTheme}
+            categories={categories}
+            openEditModal={openEditModal}
+          />
+          <AddTodoButton openCreateModal={openCreateModal} />
+        </Container>
+        <EditTodoModal
+          categories={categories}
+          closeEditModal={closeEditModal}
+          isOpen={isOpenEditModal}
+          todoId={todoId}
+        />
+        <CreateTodoModal
+          categories={categories}
+          closeModal={closeCreateModal}
+          isOpen={isOpenCreateModal}
+        />
+      </ThemeProvider>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
