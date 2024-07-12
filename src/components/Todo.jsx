@@ -6,9 +6,14 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useState } from "react";
 import { grey } from "@mui/material/colors";
+import { useTheme } from "@mui/material/styles";
 
 function Todo({ setIsClosedTodo, todo, openEditModal, removeTodo }) {
   const [isHovered, setIsHovered] = useState(false);
+
+  const theme = useTheme();
+
+  console.log();
 
   return (
     <Box
@@ -44,7 +49,7 @@ function Todo({ setIsClosedTodo, todo, openEditModal, removeTodo }) {
         </Typography>
       </Box>
       <Box
-        sx={{}}
+        sx={{ bgcolor: theme.palette.background.default, borderRadius: "5px" }}
         display={isHovered ? "flex" : "none"}
         position={"absolute"}
         top={"5%"}

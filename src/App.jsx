@@ -4,11 +4,11 @@ import Container from "@mui/material/Container";
 import Todos from "./components/Todos";
 import EditTodoModal from "./components/EditTodoModal";
 import CreateTodoModal from "./components/CreateTodoModal";
+import AddTodoButton from "./components/AddTodoButton";
 import { ThemeProvider, Box } from "@mui/material";
 import { useEffect, useState } from "react";
 import { getCategories } from "./data/data";
 import { darkTheme, defaultTheme } from "./theme";
-import AddTodoButton from "./components/AddTodoButton";
 
 import CssBaseline from "@mui/material/CssBaseline";
 
