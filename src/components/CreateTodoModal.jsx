@@ -19,6 +19,8 @@ function CreateTodoModal(props) {
   const handleApplyEdit = () => {
     createTodo(todo);
 
+    setTodo(initialState);
+
     closeModal();
   };
 
@@ -51,7 +53,7 @@ function CreateTodoModal(props) {
         <DialogContent sx={{ padding: 0 }}>
           <TextField
             id="outlined-multiline-flexible"
-            label="Edit your note"
+            label="Create your note"
             name="content"
             multiline
             value={todo.content}
