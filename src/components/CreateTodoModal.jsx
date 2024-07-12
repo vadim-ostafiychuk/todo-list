@@ -4,37 +4,36 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Box from "@mui/material/Box";
 import { TextField, DialogActions, Button, MenuItem } from "@mui/material";
 import { useEffect, useState } from "react";
-import { getTodo, updateTodo } from "../data/data";
+import { getTodo, updateTodo, createTodo } from "../data/data";
 
-function EditTodoModal(props) {
-  const { isOpen, closeEditModal, todoId, categories } = props;
-  const [todo, setTodo] = useState({
-    id: "",
-    content: "",
-    isClosed: "",
-    category: "",
-  });
+const initialState = {
+  content: "",
+  isClosed: false,
+  category: "",
+};
+
+function CreateTodoModal(props) {
+  const { isOpen, closeModal, categories } = props;
+  const [todo, setTodo] = useState(initialState);
 
   const handleApplyEdit = () => {
-    updateTodo(todo.id, { ...todo });
+    createTodo(todo);
 
-    closeEditModal();
+    closeModal();
   };
 
-  useEffect(() => {
-    if (todoId) {
-      const todoFromData = getTodo(todoId);
+  const handleCloseModal = () => {
+    setTodo(initialState);
 
-      setTodo({ ...todoFromData });
-    }
-  }, [todoId]);
+    closeModal();
+  };
 
   return (
     <Dialog
       open={isOpen}
       fullWidth={true}
       maxWidth={"sm"}
-      onClose={closeEditModal}
+      onClose={handleCloseModal}
     >
       <Box sx={{ paddingInline: "30px" }}>
         <DialogTitle
@@ -47,7 +46,7 @@ function EditTodoModal(props) {
             fontWeight: "500",
           }}
         >
-          EDIT NOTE #{todo.id}
+          CREATE NOTE
         </DialogTitle>
         <DialogContent sx={{ padding: 0 }}>
           <TextField
@@ -71,6 +70,9 @@ function EditTodoModal(props) {
             }}
             helperText="Please select category"
           >
+            <MenuItem key="" value="">
+              None
+            </MenuItem>
             {categories.map((item) => (
               <MenuItem key={item} value={item}>
                 {item}
@@ -86,7 +88,7 @@ function EditTodoModal(props) {
           }}
           disableSpacing={true}
         >
-          <Button onClick={closeEditModal}>CANCEL</Button>
+          <Button onClick={handleCloseModal}>CANCEL</Button>
           <Button onClick={() => handleApplyEdit()}>APPLY</Button>
         </DialogActions>
       </Box>
@@ -94,4 +96,4 @@ function EditTodoModal(props) {
   );
 }
 
-export default EditTodoModal;
+export default CreateTodoModal;

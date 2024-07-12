@@ -10,11 +10,63 @@ import MenuItem from "@mui/material/MenuItem";
 import BedtimeOutlinedIcon from "@mui/icons-material/BedtimeOutlined";
 import Brightness5Icon from "@mui/icons-material/Brightness5";
 import Button from "@mui/material/Button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TodoList from "./TodoList";
+import {
+  getTodos,
+  removeTodo as removeTodoFromData,
+  updateTodo,
+} from "../data/data";
 
-function Todos() {
-  const [isDarkTheme, setIsDarkTheme] = useState(false);
+function Todos(props) {
+  const { openEditModal, categories, setIsLightTheme, isLightTheme } = props;
+  const [todos, setTodos] = useState([]);
+  const [categorySelected, setCategorySelected] = useState("");
+  const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    const todos = getTodos({
+      category: categorySelected,
+      search,
+    });
+
+    setTodos(todos);
+  }, [categorySelected]);
+
+  const removeTodo = (id) => {
+    removeTodoFromData(id);
+
+    const todos = getTodos({
+      category: categorySelected,
+      search,
+    });
+
+    setTodos([...todos]);
+  };
+
+  const setIsClosedTodo = (id, isClosed) => {
+    updateTodo(id, { isClosed });
+
+    const todos = getTodos({
+      category: categorySelected,
+      search,
+    });
+
+    setTodos([...todos]);
+  };
+
+  const handleChangeCategoryFilter = (e) => {
+    setCategorySelected(e.target.value);
+  };
+
+  const handleSearchClick = () => {
+    const todos = getTodos({
+      category: categorySelected,
+      search,
+    });
+
+    setTodos(todos);
+  };
 
   return (
     <Box>
@@ -31,9 +83,16 @@ function Todos() {
           <OutlinedInput
             id="outlined-adornment-password"
             type="text"
+            value={search}
+            onKeyUp={(e) => {
+              if (e.key === "Enter") {
+                handleSearchClick();
+              }
+            }}
+            onChange={(e) => setSearch(e.target.value)}
             endAdornment={
               <InputAdornment position="end">
-                <IconButton edge="end">
+                <IconButton onClick={handleSearchClick} edge="end">
                   <SearchIcon />
                 </IconButton>
               </InputAdornment>
@@ -44,22 +103,33 @@ function Todos() {
         <FormControl sx={{ minWidth: 120 }}>
           <Select
             displayEmpty
-            value={""}
-            inputProps={{ "aria-label": "Without label" }}
+            onChange={handleChangeCategoryFilter}
+            defaultValue={""}
+            inputProps={{ "aria-label": "Select Category" }}
           >
             <MenuItem value="">All</MenuItem>
+            {categories.map((item) => (
+              <MenuItem key={item} value={item}>
+                {item}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
         <Button
-          onClick={() => setIsDarkTheme(!isDarkTheme)}
+          onClick={() => setIsLightTheme(!isLightTheme)}
           component="label"
           role={undefined}
           variant="contained"
         >
-          {isDarkTheme ? <Brightness5Icon /> : <BedtimeOutlinedIcon />}
+          {isLightTheme ? <Brightness5Icon /> : <BedtimeOutlinedIcon />}
         </Button>
       </Box>
-      <TodoList />
+      <TodoList
+        setIsClosedTodo={setIsClosedTodo}
+        removeTodo={removeTodo}
+        openEditModal={openEditModal}
+        todos={todos}
+      />
     </Box>
   );
 }

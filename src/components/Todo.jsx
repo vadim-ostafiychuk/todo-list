@@ -7,13 +7,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useState } from "react";
 import { grey } from "@mui/material/colors";
 
-function Todo() {
-  const [isClose, setIsClose] = useState(true);
+function Todo({ setIsClosedTodo, todo, openEditModal, removeTodo }) {
   const [isHovered, setIsHovered] = useState(false);
-
-  const handleClose = () => {
-    setIsClose(!isClose);
-  };
 
   return (
     <Box
@@ -27,24 +22,27 @@ function Todo() {
       sx={{}}
     >
       <Checkbox
-        checked={isClose}
-        onClick={() => handleClose()}
+        checked={todo.isClosed}
+        onChange={() => setIsClosedTodo(todo.id, !todo.isClosed)}
         sx={{ "& .MuiSvgIcon-root": { fontSize: 30 } }}
       />
-      <Typography
-        variant="body1"
-        flexGrow={1}
-        fontSize={"1.2rem"}
-        fontWeight={"500"}
-        lineHeight={"1"}
-        sx={{
-          textDecoration: isClose ? "line-through" : "none",
-          color: isClose ? grey[500] : undefined,
-          transition: "all .75s",
-        }}
-      >
-        Lorem ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit.
-      </Typography>
+      <Box flexGrow={1}>
+        <Typography
+          fontSize={"1.2rem"}
+          fontWeight={"500"}
+          lineHeight={"1"}
+          sx={{
+            textDecoration: todo.isClosed ? "line-through" : "none",
+            color: todo.isClosed ? grey[500] : undefined,
+            transition: "all .75s",
+          }}
+        >
+          {todo.content}
+        </Typography>
+        <Typography variant="p" fontSize={"1rem"} fontStyle={"italic"}>
+          {todo.category}
+        </Typography>
+      </Box>
       <Box
         sx={{}}
         display={isHovered ? "flex" : "none"}
@@ -52,15 +50,10 @@ function Todo() {
         top={"5%"}
         right={"0"}
       >
-        <IconButton
-          onClick={() => {
-            console.log("GG");
-          }}
-          aria-label="edit"
-        >
+        <IconButton onClick={() => openEditModal(todo.id)} aria-label="edit">
           <EditIcon sx={{ fontSize: "15px", transition: "all .75s" }} />
         </IconButton>
-        <IconButton aria-label="delete" onClick={() => {}}>
+        <IconButton aria-label="delete" onClick={() => removeTodo(todo.id)}>
           <DeleteIcon sx={{ fontSize: "15px", transition: "all .75s" }} />
         </IconButton>
       </Box>
